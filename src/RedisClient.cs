@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Soenneker.Extensions.Configuration;
+using Soenneker.Extensions.Task;
 using Soenneker.Redis.Client.Abstract;
 using Soenneker.Utils.AsyncSingleton;
 using StackExchange.Redis;
@@ -29,7 +30,7 @@ public class RedisClient : IRedisClient
             ConfigurationOptions options = ConfigurationOptions.Parse(connectionString);
             options.AllowAdmin = true;
 
-            ConnectionMultiplexer client = await ConnectionMultiplexer.ConnectAsync(options);
+            ConnectionMultiplexer client = await ConnectionMultiplexer.ConnectAsync(options).NoSync();
 
             return client;
         });
