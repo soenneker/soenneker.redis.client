@@ -11,5 +11,5 @@ namespace Soenneker.Redis.Client.Abstract;
 /// </summary>
 public interface IRedisClient : IDisposable, IAsyncDisposable
 {
-    ValueTask<ConnectionMultiplexer> GetClient();
+    ValueTask<ConnectionMultiplexer> Get();
 }

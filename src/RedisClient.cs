@@ -36,7 +36,7 @@ public class RedisClient : IRedisClient
         });
     }
 
-    public ValueTask<ConnectionMultiplexer> GetClient()
+    public ValueTask<ConnectionMultiplexer> Get()
     {
         return _client.Get();
     }
