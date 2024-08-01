@@ -47,7 +47,7 @@
 
         <PackageReference Include="Soenneker.Extensions.Task" Version="2.1.60" />
 
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="2.1.326" />
+        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="2.1.327" />
 
         <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
     </ItemGroup>
