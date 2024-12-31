@@ -36,16 +36,10 @@
         <None Include="..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\LICENSE" Pack="true" PackagePath="\" />
         <None Include="..\icon.png" Pack="true" PackagePath="\" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
 
         
 
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="3.0.579" />
-
-        
-
-        <PackageReference Include="Soenneker.Extensions.Task" Version="3.0.80" />
 
         <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="3.0.534" />
 
