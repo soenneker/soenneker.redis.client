@@ -20,7 +20,7 @@ public class RedisClientTests : FixturedUnitTest
     {
         var redisClient = Resolve<IRedisClient>();
 
-        ConnectionMultiplexer client = await redisClient.Get();
+        ConnectionMultiplexer client = await redisClient.Get(CancellationToken);
 
         client.Should().NotBeNull();
     }
