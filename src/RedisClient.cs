@@ -31,9 +31,7 @@ public class RedisClient : IRedisClient
             ConfigurationOptions options = ConfigurationOptions.Parse(connectionString);
             options.AllowAdmin = true;
 
-            ConnectionMultiplexer client = await ConnectionMultiplexer.ConnectAsync(options).NoSync();
-
-            return client;
+            return await ConnectionMultiplexer.ConnectAsync(options).NoSync();
         });
     }
 
