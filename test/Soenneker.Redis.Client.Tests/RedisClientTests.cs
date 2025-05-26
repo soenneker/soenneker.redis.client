@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FluentAssertions;
+using AwesomeAssertions;
 using Soenneker.Redis.Client.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using StackExchange.Redis;
