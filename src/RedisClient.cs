@@ -12,7 +12,7 @@ using StackExchange.Redis;
 namespace Soenneker.Redis.Client;
 
 /// <inheritdoc cref="IRedisClient"/>
-public class RedisClient : IRedisClient
+public sealed class RedisClient : IRedisClient
 {
     private readonly AsyncSingleton<ConnectionMultiplexer> _client;
 
@@ -42,8 +42,6 @@ public class RedisClient : IRedisClient
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         _logger.LogDebug(">> REDIS: Disposing...");
 
         return _client.DisposeAsync();
@@ -51,8 +49,6 @@ public class RedisClient : IRedisClient
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _logger.LogDebug(">> REDIS: Disposing...");
 
         _client.Dispose();
