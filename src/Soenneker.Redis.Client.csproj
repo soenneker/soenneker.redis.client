@@ -48,6 +48,6 @@
 
         <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="3.0.716" />
 
-        <PackageReference Include="StackExchange.Redis" Version="2.9.11" />
+        <PackageReference Include="StackExchange.Redis" Version="2.9.17" />
     </ItemGroup>
 </Project>
