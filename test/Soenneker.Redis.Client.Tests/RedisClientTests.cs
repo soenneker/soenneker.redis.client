@@ -19,7 +19,7 @@ public class RedisClientTests : HostedUnitTest
     {
         var redisClient = Resolve<IRedisClient>();
 
-        ConnectionMultiplexer client = await redisClient.Get(CancellationToken);
+        ConnectionMultiplexer client = await redisClient.Get(System.Threading.CancellationToken.None);
 
         client.Should().NotBeNull();
     }
