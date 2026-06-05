@@ -41,12 +41,19 @@ public sealed class RedisClient : IRedisClient
     public ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default) =>
         _client.Get(cancellationToken);
 
+    /// <summary>
+    /// Asynchronously releases resources used by the current instance.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         _logger.LogDebug(">> REDIS: Disposing...");
         return _client.DisposeAsync();
     }
 
+    /// <summary>
+    /// Releases resources used by the current instance.
+    /// </summary>
     public void Dispose()
     {
         _logger.LogDebug(">> REDIS: Disposing...");
