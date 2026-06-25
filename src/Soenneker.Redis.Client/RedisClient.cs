@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Soenneker.Dictionaries.Singletons;
 using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.Task;
 using Soenneker.Redis.Client.Abstract;
-using Soenneker.Utils.AsyncSingleton;
 using StackExchange.Redis;
 
 namespace Soenneker.Redis.Client;
@@ -16,22 +16,23 @@ public sealed class RedisClient : IRedisClient
     private readonly ILogger<RedisClient> _logger;
     private readonly string _connectionString;
 
-    private readonly AsyncSingleton<ConnectionMultiplexer> _client;
+    private readonly SingletonDictionary<ConnectionMultiplexer, string> _clients;
 
     public RedisClient(IConfiguration config, ILogger<RedisClient> logger)
     {
         _logger = logger;
         _connectionString = config.GetValueStrict<string>("Azure:Redis:ConnectionString"); // TODO: not reliant on Azure namespace
 
-        // No closure: method group
-        _client = new AsyncSingleton<ConnectionMultiplexer>(ConnectAsync);
+        _clients = new SingletonDictionary<ConnectionMultiplexer, string>(Connect);
     }
 
-    private async ValueTask<ConnectionMultiplexer> ConnectAsync()
+    private async ValueTask<ConnectionMultiplexer> Connect(string _, string connectionString, CancellationToken cancellationToken)
     {
-        _logger.LogDebug(">> REDIS: Connecting to {endpoint} ...", _connectionString);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        ConfigurationOptions options = ConfigurationOptions.Parse(_connectionString);
+        ConfigurationOptions options = ConfigurationOptions.Parse(connectionString);
+        _logger.LogDebug(">> REDIS: Connecting to {endpoint} ...", options.ToString(false));
+
         options.AllowAdmin = true;
 
         return await ConnectionMultiplexer.ConnectAsync(options)
@@ -39,7 +40,10 @@ public sealed class RedisClient : IRedisClient
     }
 
     public ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default) =>
-        _client.Get(cancellationToken);
+        _clients.Get(_connectionString, _connectionString, cancellationToken);
+
+    public ValueTask<ConnectionMultiplexer> Get(string connectionString, CancellationToken cancellationToken = default) =>
+        _clients.Get(connectionString, connectionString, cancellationToken);
 
     /// <summary>
     /// Asynchronously releases resources used by the current instance.
@@ -48,7 +52,7 @@ public sealed class RedisClient : IRedisClient
     public ValueTask DisposeAsync()
     {
         _logger.LogDebug(">> REDIS: Disposing...");
-        return _client.DisposeAsync();
+        return _clients.DisposeAsync();
     }
 
     /// <summary>
@@ -57,6 +61,6 @@ public sealed class RedisClient : IRedisClient
     public void Dispose()
     {
         _logger.LogDebug(">> REDIS: Disposing...");
-        _client.Dispose();
+        _clients.Dispose();
     }
 }

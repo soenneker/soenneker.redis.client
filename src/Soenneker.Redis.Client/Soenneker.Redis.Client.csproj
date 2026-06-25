@@ -42,8 +42,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Soenneker.Dictionaries.Singletons" Version="4.0.57" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.839" />
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.804" />
         <PackageReference Include="StackExchange.Redis" Version="3.0.0" />
     </ItemGroup>
 </Project>

@@ -18,4 +18,12 @@ public interface IRedisClient : IDisposable, IAsyncDisposable
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task containing the result of the operation.</returns>
     ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
+    ValueTask<ConnectionMultiplexer> Get(string connectionString, CancellationToken cancellationToken = default);
 }
