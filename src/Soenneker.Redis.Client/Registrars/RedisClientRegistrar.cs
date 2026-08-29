@@ -12,6 +12,8 @@ public static class RedisClientRegistrar
     /// <summary>
     /// Adds <see cref="IRedisClient"/> as a singleton service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddRedisClientAsSingleton(this IServiceCollection services)
     {
         services.TryAddSingleton<IRedisClient, RedisClient>();
@@ -20,10 +22,10 @@ public static class RedisClientRegistrar
     }
 
     /// <summary>
-    /// Adds redis client as scoped.
+    /// Registers Redis Client with a scoped lifetime.
     /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddRedisClientAsScoped(this IServiceCollection services)
     {
         services.TryAddScoped<IRedisClient, RedisClient>();
