@@ -50,4 +50,4 @@ RedisValue status = await database.StringGetAsync("orders:42:status");
 
 The singleton registration is the normal choice: `ConnectionMultiplexer` is designed to be shared. Each distinct connection string is connected once and cached for the lifetime of `IRedisClient`. The scoped registrar is available when a scope must own and dispose its own connection cache.
 
-Administrative Redis commands remain disabled unless the supplied connection string explicitly includes `allowAdmin=true`.
+The client enables StackExchange.Redis administrative commands for compatibility with the Soenneker server utilities. Restrict the configured Redis credentials and network access accordingly.
