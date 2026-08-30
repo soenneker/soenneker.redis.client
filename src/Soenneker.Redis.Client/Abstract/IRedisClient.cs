@@ -6,24 +6,22 @@ using StackExchange.Redis;
 namespace Soenneker.Redis.Client.Abstract;
 
 /// <summary>
-/// A utility library for Redis client accessibility <para/>
-/// Implements double checked locking during connect <para/> 
-/// Singleton IoC
+/// Provides lazily created, cached Redis connection multiplexers.
 /// </summary>
 public interface IRedisClient : IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Returns the configured connection Multiplexer used by the Redis Client.
+    /// Gets the multiplexer for the configured <c>Azure:Redis:ConnectionString</c> value.
     /// </summary>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A task whose result is the requested connection Multiplexer.</returns>
+    /// <returns>The shared multiplexer for the configured connection string.</returns>
     ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns the configured connection Multiplexer used by the Redis Client.
+    /// Gets the cached multiplexer for a connection string, connecting it on first use.
     /// </summary>
     /// <param name="connectionString">Connection string used to open the backing service.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A task whose result is the requested connection Multiplexer.</returns>
+    /// <returns>The shared multiplexer for <paramref name="connectionString"/>.</returns>
     ValueTask<ConnectionMultiplexer> Get(string connectionString, CancellationToken cancellationToken = default);
 }

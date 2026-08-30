@@ -1,44 +1,53 @@
 [![](https://img.shields.io/nuget/v/Soenneker.Redis.Client.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Redis.Client/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.redis.client/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.redis.client/actions/workflows/publish-package.yml)
 [![](https://img.shields.io/nuget/dt/Soenneker.Redis.Client.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Redis.Client/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.redis.client/build-and-test.yml?label=build%20and%20test&style=for-the-badge)](https://github.com/soenneker/soenneker.redis.client/actions/workflows/build-and-test.yml)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.redis.client/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.redis.client/actions/workflows/codeql.yml)
 
 # Soenneker.Redis.Client
 
-A utility library for Redis client accessibility Implements double checked locking during connect Singleton IoC.
+Provides shared, lazily connected StackExchange.Redis `ConnectionMultiplexer` instances through dependency injection.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.Redis.Client
 ```
 
-## Quick start
+## Configuration
 
-```csharp
-using Soenneker.Redis.Client.Registrars;
-using Microsoft.Extensions.DependencyInjection;
+The parameterless `Get()` overload reads the connection string from configuration:
 
-var services = new ServiceCollection();
-var result = services.AddRedisClientAsSingleton();
+```json
+{
+  "Azure": {
+    "Redis": {
+      "ConnectionString": "localhost:6379,abortConnect=false"
+    }
+  }
+}
 ```
 
-Adds `IRedisClient` as a singleton service.
+Alternatively, pass a StackExchange.Redis connection string directly to `Get(connectionString)`.
 
-## What you get
+## Registration and use
 
-- `IRedisClient` — A utility library for Redis client accessibility Implements double checked locking during connect Singleton IoC.
-- `RedisClientRegistrar` — Represents the redis client registrar.
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Soenneker.Redis.Client.Abstract;
+using Soenneker.Redis.Client.Registrars;
+using StackExchange.Redis;
 
-## API at a glance
+services.AddRedisClientAsSingleton();
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `RedisClientRegistrar.AddRedisClientAsSingleton(services)` | Adds `IRedisClient` as a singleton service. | The same service collection, so additional registrations can be chained. |
-| `RedisClientRegistrar.AddRedisClientAsScoped(services)` | Registers Redis Client with a scoped lifetime. | The same service collection, so additional registrations can be chained. |
+IRedisClient redisClient = serviceProvider.GetRequiredService<IRedisClient>();
+ConnectionMultiplexer multiplexer = await redisClient.Get(cancellationToken);
+IDatabase database = multiplexer.GetDatabase();
 
-## Practical notes
+await database.StringSetAsync("orders:42:status", "ready");
+RedisValue status = await database.StringGetAsync("orders:42:status");
+```
 
-- Reuse the registered client instead of constructing one per operation.
-- Calls that return a cached or singleton value reuse the same instance until the owning service is disposed.
-- Dispose instances you own when their scope ends so held resources can be released.
+The singleton registration is the normal choice: `ConnectionMultiplexer` is designed to be shared. Each distinct connection string is connected once and cached for the lifetime of `IRedisClient`. The scoped registrar is available when a scope must own and dispose its own connection cache.
+
+Administrative Redis commands remain disabled unless the supplied connection string explicitly includes `allowAdmin=true`.
