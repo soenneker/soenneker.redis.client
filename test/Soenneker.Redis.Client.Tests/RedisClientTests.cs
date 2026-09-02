@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using Soenneker.Redis.Client.Abstract;
@@ -15,11 +16,11 @@ public class RedisClientTests : HostedUnitTest
     }
 
     [Test]
-    public async ValueTask Get_should_return_client()
+    public async ValueTask Get_should_return_client(CancellationToken cancellationToken)
     {
         var redisClient = Resolve<IRedisClient>();
 
-        ConnectionMultiplexer client = await redisClient.Get(System.Threading.CancellationToken.None);
+        ConnectionMultiplexer client = await redisClient.Get(cancellationToken);
 
         client.Should().NotBeNull();
     }
