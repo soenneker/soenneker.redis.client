@@ -10,6 +10,7 @@ using StackExchange.Redis;
 
 namespace Soenneker.Redis.Client;
 
+/// <inheritdoc cref="IRedisClient" />
 public sealed class RedisClient : IRedisClient
 {
     private readonly ILogger<RedisClient> _logger;
