@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using StackExchange.Redis;
@@ -18,7 +18,7 @@ public interface IRedisClient : IDisposable, IAsyncDisposable
     ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the cached multiplexer for a connection string, connecting it on first use.
+    /// Gets the cached multiplexer for a connection string, connecting it on first use. No configured default is required.
     /// </summary>
     /// <param name="connectionString">Connection string used to open the backing service.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>

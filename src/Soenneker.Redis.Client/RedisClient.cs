@@ -1,27 +1,25 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Soenneker.Dictionaries.Singletons;
-using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.Task;
 using Soenneker.Redis.Client.Abstract;
 using StackExchange.Redis;
 
 namespace Soenneker.Redis.Client;
 
-/// <inheritdoc cref="IRedisClient" />
 public sealed class RedisClient : IRedisClient
 {
     private readonly ILogger<RedisClient> _logger;
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
     private readonly SingletonDictionary<ConnectionMultiplexer, string> _clients;
 
     public RedisClient(IConfiguration config, ILogger<RedisClient> logger)
     {
         _logger = logger;
-        _connectionString = config.GetValueStrict<string>("Azure:Redis:ConnectionString"); // TODO: not reliant on Azure namespace
+        _connectionString = config["Azure:Redis:ConnectionString"];
 
         _clients = new SingletonDictionary<ConnectionMultiplexer, string>(Connect);
     }
@@ -39,8 +37,13 @@ public sealed class RedisClient : IRedisClient
                                           .NoSync();
     }
 
-    public ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default) =>
-        _clients.Get(_connectionString, _connectionString, cancellationToken);
+    public ValueTask<ConnectionMultiplexer> Get(CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(_connectionString))
+            throw new System.InvalidOperationException("Configure Azure:Redis:ConnectionString or use Get(connectionString).");
+
+        return _clients.Get(_connectionString, _connectionString, cancellationToken);
+    }
 
     public ValueTask<ConnectionMultiplexer> Get(string connectionString, CancellationToken cancellationToken = default) =>
         _clients.Get(connectionString, connectionString, cancellationToken);
