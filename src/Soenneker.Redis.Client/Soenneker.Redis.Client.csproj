@@ -42,7 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Dictionaries.Singletons" Version="4.0.94" />
+        <PackageReference Include="Soenneker.Dictionaries.Singletons" Version="4.0.95" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.877" />
         <PackageReference Include="StackExchange.Redis" Version="3.1.31" />
     </ItemGroup>
