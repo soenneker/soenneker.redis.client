@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <IsAotCompatible>true</IsAotCompatible>
         <Nullable>enable</Nullable>
         <Platforms>AnyCPU</Platforms>
@@ -9,7 +9,7 @@
 
     <PropertyGroup>
         <Description>A utility library for Redis client accessibility</Description>
-        <Version Condition="'$(BUILD_VERSION)' == ''">4.0.0</Version>
+        <Version Condition="'$(BUILD_VERSION)' == ''">11.0.0</Version>
         <Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
         <AssemblyName>Soenneker.Redis.Client</AssemblyName>
         <PackageId>Soenneker.Redis.Client</PackageId>
@@ -44,7 +44,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Dictionaries.Singletons" Version="4.0.129" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.910" />
+        <PackageReference Include="Soenneker.Extensions.Configuration" Version="11.0.913" />
         <PackageReference Include="StackExchange.Redis" Version="3.4.20" />
     </ItemGroup>
 </Project>
